@@ -1,0 +1,10 @@
+---
+- name: installe docker  sur Ubuntu
+  apt: name=docker.io state=present update_cache=yes  
+
+- name: installe python3-docker
+  apt: name=python3-docker state=present update_cache=yes
+
+- name: démarre service docker
+  service: state=started name=docker
+...  

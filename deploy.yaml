@@ -1,0 +1,33 @@
+---
+- name: Deploy Docker Container on 4 EC2 Instances
+  hosts: all
+  gather_facts: no 
+  become: yes 
+  vars:    
+    image_name: mayens/node-app
+    tag_name: "1.0"
+    container_name: nodeapp     
+
+  roles:
+  - docker
+
+
+  tasks:
+
+  - name: Build image {{image_name}}
+    community.docker.docker_image:
+      name: '{{image_name}}:{{tag_name}}'
+      force_source: yes
+      source: pull      
+    tags: rebuild 
+
+  - name: Start Docker container {{ container_name }} based on {{ image_name }}
+    community.docker.docker_container:
+      name: '{{ container_name }}'
+      image: '{{image_name}}:{{tag_name}}'
+      published_ports:
+        - 3000:3000
+    tags: rebuild 
+
+
+...
